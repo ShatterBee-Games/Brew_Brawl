@@ -53,20 +53,39 @@ namespace zoe
 
         void playerTurn() => dialogue.text = "Choose an action:";
 
-        IEnumerator enemyTurn()
+            IEnumerator enemyTurn()
         {
-            dialogue.text = enemyUnit.unitName + " Attacks!";
+            dialogue.text = enemyUnit.unitName + " is deciding their move...";
             yield return new WaitForSeconds(1f);
 
-            bool isDead = playerUnit.takeDamage(enemyUnit.damage);
-            playerHUD.SetHP(playerUnit.currentHP);
-            yield return new WaitForSeconds(1f);
+            // Implement enemy AI logic here
+            int randomAction = Random.Range(0, 2); // 0 for attack, 1 for heal
 
-            state = isDead ? BattleState.LOST : BattleState.PLAYERTURN;
-            if (isDead)
-                endBattle();
-            else
+            if (randomAction == 0)
+            {
+                dialogue.text = enemyUnit.unitName + " Attacks!";
+                yield return new WaitForSeconds(1f);
+
+                bool isDead = playerUnit.takeDamage(enemyUnit.damage);
+                playerHUD.SetHP(playerUnit.currentHP);
+                yield return new WaitForSeconds(1f);
+
+                state = isDead ? BattleState.LOST : BattleState.PLAYERTURN;
+                if (isDead)
+                    endBattle();
+                else
+                    playerTurn();
+            }
+            else if (randomAction == 1)
+            {
+                enemyUnit.heal(5);
+                enemyHUD.SetHP(enemyUnit.currentHP);
+                dialogue.text = enemyUnit.unitName + " heals themselves!";
+                yield return new WaitForSeconds(2f);
+
+                state = BattleState.PLAYERTURN;
                 playerTurn();
+            }
         }
 
         void endBattle() 
