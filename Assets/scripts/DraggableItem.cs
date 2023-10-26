@@ -10,6 +10,7 @@ namespace zoe {
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Image image;
+    public string ItemName;
     [HideInInspector] public Transform parent;
     public void OnBeginDrag(PointerEventData eventData) {
         parent = transform.parent;
