@@ -53,7 +53,7 @@ namespace zoe
 
         void playerTurn() => dialogue.text = "Choose an action:";
 
-            IEnumerator enemyTurn()
+        IEnumerator enemyTurn()
         {
             dialogue.text = enemyUnit.unitName + " is deciding their move...";
             yield return new WaitForSeconds(1f);
