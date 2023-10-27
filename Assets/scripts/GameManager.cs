@@ -1,3 +1,4 @@
+// zoe - 2023
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace zoe
         private string currentItemA = "";
         private string currentItemB = "";
 
+        public bool isDebugging = false;
+
         public string[] recipes; // Public array for recipes
         public Sprite[] results; // Public array for results
 
@@ -25,18 +28,18 @@ namespace zoe
             // Add more initialization logic here if necessary
         }
 
-        void Update(){
+        void Update()
+        {
             UpdateResult();
         }
 
         public void UpdateResult()
         {
-
             UpdateCurrentItems(); // Update the current items in the slots
 
             string currentRecipe = currentItemA + currentItemB;
 
-            Debug.Log("Current Recipe: " + currentRecipe);
+            if (isDebugging){Debug.Log("Current Recipe: " + currentRecipe);}
 
             for (int i = 0; i < recipes.Length; i++)
             {
@@ -47,12 +50,14 @@ namespace zoe
                         // Set the UI image sprite to the corresponding result sprite
                         resultImage.sprite = results[i];
                         recipeFound = true;
-                        Debug.Log("Result updated.");
+                        if (isDebugging){Debug.Log("Result updated.");}
                         break;
                     }
-                }else{
-                        recipeFound = false;
-                    }
+                }
+                else
+                {
+                    recipeFound = false;
+                }
             }
 
             resultImage.gameObject.SetActive(recipeFound);
@@ -77,6 +82,11 @@ namespace zoe
             {
                 currentItemB = "";
             }
+        }
+
+        public string GetCurrentRecipe()
+        {
+            return currentItemA + currentItemB;
         }
     }
 }
