@@ -19,6 +19,7 @@ namespace zoe
     {
         public GameObject playerPrefab;
         public GameObject enemyPrefab;
+        
 
         public Transform playerSpawn;
         public Transform enemySpawn;
@@ -36,6 +37,8 @@ namespace zoe
 
         string currentCharacter;
         int damageValue;
+
+        private int playerTurnCounter = 1;
 
         void Start()
         {
@@ -62,7 +65,7 @@ namespace zoe
             playerTurn();
         }
 
-        void playerTurn() => dialogue.text = "Choose an action:";
+        void playerTurn() => dialogue.text = "Brew a potion:";
 
         IEnumerator enemyTurn()
         {
@@ -86,11 +89,12 @@ namespace zoe
                 playerHUD.SetHP(playerUnit.currentHP);
                 yield return new WaitForSeconds(1f);
 
-                state = isDead ? BattleState.LOST : BattleState.PLAYERTURN;
+                state = isDead ? BattleState.LOST : BattleState.PLAYERTURN ;
                 if (isDead)
                     endBattle();
                 else
                     playerTurn();
+                    playerTurnCounter++; 
             }
             else if (randomAction == 1)
             {
@@ -100,6 +104,7 @@ namespace zoe
                 yield return new WaitForSeconds(2f);
 
                 state = BattleState.PLAYERTURN;
+                playerTurnCounter++; 
                 playerTurn();
             }
         }
@@ -116,15 +121,18 @@ namespace zoe
             }
         }
 
-        public void onAttack()
+       public void onAttack()
         {
-            if (state != BattleState.PLAYERTURN)
+            if (state != BattleState.PLAYERTURN || playerTurnCounter <= 0)
                 return;
 
             CheckActiveEnemy();
             CheckCurrentRecipe();
             StartCoroutine(playerAttack());
+
+            playerTurnCounter--; // Decrease the turn counter after attacking
         }
+
 
         IEnumerator playerAttack()
         {
@@ -172,7 +180,7 @@ namespace zoe
             bool isDead = enemyUnit.takeDamage(damageValue);
             enemyHUD.SetHP(enemyUnit.currentHP);
             dialogue.text = "Attack!";
-            dialogue.text = "Choose an action:";
+            dialogue.text = "Brew a potion:";
             yield return new WaitForSeconds(2f);
 
             if (isDead)
