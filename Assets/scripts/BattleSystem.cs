@@ -123,7 +123,7 @@ namespace zoe
 
        public void onAttack()
         {
-            if (state != BattleState.PLAYERTURN || playerTurnCounter <= 0)
+            if (state != BattleState.PLAYERTURN || playerTurnCounter <= 0 || state == BattleState.WON || state == BattleState.LOST)
                 return;
 
             CheckActiveEnemy();
